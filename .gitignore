@@ -1,0 +1,18 @@
+﻿# IDE and local tooling
+.idea/
+.codex/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Runtime output
+save_data/
+
+# Local worktree helper
+.worktrees/
+
+# Session planning files
+task_plan.md
+findings.md
+progress.md

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrafficDetect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="page-shell">
+    <aside class="panel control-panel">
+      <div class="brand-block">
+        <p class="kicker">TrafficDetect</p>
+        <h1 id="web-title">Traffic Scene Intelligence</h1>
+        <p class="subcopy">BDD100K 10 类检测 + RoadObstacle21 鲁棒性评估</p>
+      </div>
+
+      <section class="section-block">
+        <div class="section-header">
+          <span>输入源</span>
+          <span class="tiny-label" id="engine-status">等待模型加载</span>
+        </div>
+        <input type="file" id="file-input" accept="image/*" hidden>
+        <button class="action-btn" id="upload-btn">上传本地图像</button>
+        <button class="action-btn secondary" id="camera-btn">启动实时视频流</button>
+      </section>
+
+      <section class="section-block">
+        <div class="section-header">
+          <span>推理参数</span>
+          <span class="tiny-label">实时生效</span>
+        </div>
+        <label class="slider-group">
+          <span>Conf <strong id="conf-val">0.25</strong></span>
+          <input id="conf-slider" type="range" min="0" max="1" step="0.01" value="0.25">
+        </label>
+        <label class="slider-group">
+          <span>IoU <strong id="iou-val">0.45</strong></span>
+          <input id="iou-slider" type="range" min="0" max="1" step="0.01" value="0.45">
+        </label>
+        <label class="toggle-group">
+          <span>显示标签</span>
+          <input id="labels-toggle" type="checkbox" checked>
+        </label>
+      </section>
+
+      <section class="section-block">
+        <div class="section-header">
+          <span>类别面板</span>
+          <span class="tiny-label">来自 /api/config</span>
+        </div>
+        <div id="class-tags" class="tag-grid"></div>
+      </section>
+    </aside>
+
+    <main class="panel stage-panel">
+      <div class="stage-head">
+        <div>
+          <p class="kicker">Live View</p>
+          <h2>检测输出画布</h2>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">IDLE</span>
+        </div>
+      </div>
+
+      <div class="stage-frame">
+        <img id="result-image" alt="检测结果">
+        <video id="hidden-video" autoplay playsinline muted hidden></video>
+        <canvas id="offscreen-canvas" hidden></canvas>
+        <div class="empty-state" id="empty-state">
+          <p>上传一张交通场景图像，或开启摄像头实时流。</p>
+        </div>
+      </div>
+
+      <div class="telemetry-grid">
+        <article class="telemetry-card">
+          <p class="kicker">Telemetry</p>
+          <h3>检测结果</h3>
+          <div id="results-list" class="result-list"></div>
+        </article>
+        <article class="telemetry-card">
+          <p class="kicker">Streaming</p>
+          <h3>实时状态</h3>
+          <div class="stream-metrics">
+            <div>
+              <span class="metric-label">FPS</span>
+              <strong id="fps-counter">0</strong>
+            </div>
+            <div>
+              <span class="metric-label">Mode</span>
+              <strong id="mode-label">IMAGE</strong>
+            </div>
+          </div>
+          <p class="stream-note">若模型尚未训练完成，检测接口会返回清晰错误信息，不会静默降级。</p>
+        </article>
+      </div>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
+

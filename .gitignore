@@ -6,8 +6,13 @@
 __pycache__/
 *.py[cod]
 
-# Runtime output
+# Runtime output and generated artifacts
+results/
 save_data/
+legacy_backup/
+weights/*.pt
+weights/*.onnx
+datasets/
 
 # Local worktree helper
 .worktrees/

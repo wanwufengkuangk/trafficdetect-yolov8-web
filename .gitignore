@@ -13,6 +13,8 @@ legacy_backup/
 weights/*.pt
 weights/*.onnx
 datasets/
+*.pt
+*.onnx
 
 # Local worktree helper
 .worktrees/

@@ -1,0 +1,6 @@
+path: datasets/idd_animal_yolo
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: animal

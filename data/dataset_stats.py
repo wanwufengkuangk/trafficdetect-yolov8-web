@@ -38,8 +38,15 @@ def collect_split_stats(labels_dir: Path, class_names: dict[int, str]) -> dict[s
     }
 
 
+def resolve_splits(dataset_root: Path) -> list[str]:
+    labels_root = dataset_root / "labels"
+    if not labels_root.exists():
+        return []
+    return sorted(path.name for path in labels_root.iterdir() if path.is_dir())
+
+
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Summarize label distribution for the rebuilt BDD100K dataset.")
+    parser = argparse.ArgumentParser(description="Summarize label distribution for a YOLO-style dataset.")
     parser.add_argument("--dataset-root", type=Path, default=Path("datasets/bdd100k"))
     parser.add_argument("--dataset-yaml", type=Path, default=Path("configs/dataset_bdd100k.yaml"))
     parser.add_argument("--output", type=Path, default=Path("results/dataset_stats.json"))
@@ -49,10 +56,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     class_names = load_dataset_names(args.dataset_yaml.resolve())
-    report = {
-        "train": collect_split_stats((args.dataset_root / "labels" / "train").resolve(), class_names),
-        "val": collect_split_stats((args.dataset_root / "labels" / "val").resolve(), class_names),
-    }
+    splits = resolve_splits(args.dataset_root.resolve())
+    if not splits:
+        raise SystemExit("no label splits found under labels/")
+    report = {split: collect_split_stats((args.dataset_root / "labels" / split).resolve(), class_names) for split in splits}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -60,4 +67,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

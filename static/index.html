@@ -15,8 +15,19 @@
       <div class="brand-block">
         <p class="kicker">TrafficDetect</p>
         <h1 id="web-title">Traffic Scene Intelligence</h1>
-        <p class="subcopy">BDD100K 10 类检测 + RoadObstacle21 鲁棒性评估</p>
+        <p class="subcopy" id="web-subcopy">BDD100K 交通检测 + IDD 道路动物识别</p>
       </div>
+
+      <section class="section-block">
+        <div class="section-header">
+          <span>任务模式</span>
+          <span class="tiny-label" id="module-indicator">交通目标检测</span>
+        </div>
+        <div class="module-switch">
+          <button class="module-btn active" id="traffic-module-btn" data-module="traffic" type="button">交通目标检测</button>
+          <button class="module-btn" id="obstacle-module-btn" data-module="obstacle" type="button">道路动物识别</button>
+        </div>
+      </section>
 
       <section class="section-block">
         <div class="section-header">
@@ -24,7 +35,14 @@
           <span class="tiny-label" id="engine-status">等待模型加载</span>
         </div>
         <input type="file" id="file-input" accept="image/*" hidden>
+        <input type="file" id="folder-input" accept="image/*" webkitdirectory directory multiple hidden>
         <button class="action-btn" id="upload-btn">上传本地图像</button>
+        <button class="action-btn secondary" id="folder-btn" hidden>选择序列文件夹</button>
+        <div class="sequence-action-row" id="sequence-action-row" hidden>
+          <button class="action-btn secondary compact" id="sequence-play-btn" type="button">开始序列播放</button>
+          <button class="action-btn tertiary compact" id="sequence-export-btn" type="button">导出序列结果</button>
+        </div>
+        <p class="tiny-note" id="sequence-selection" hidden>未选择序列文件夹</p>
         <button class="action-btn secondary" id="camera-btn">启动实时视频流</button>
       </section>
 
@@ -50,7 +68,7 @@
       <section class="section-block">
         <div class="section-header">
           <span>类别面板</span>
-          <span class="tiny-label">来自 /api/config</span>
+          <span class="tiny-label" id="class-source-label">来自当前模块配置</span>
         </div>
         <div id="class-tags" class="tag-grid"></div>
       </section>
@@ -84,24 +102,41 @@
           <div id="results-list" class="result-list"></div>
         </article>
         <article class="telemetry-card">
-          <p class="kicker">Streaming</p>
-          <h3>实时状态</h3>
+          <p class="kicker">Module State</p>
+          <h3>运行状态</h3>
           <div class="stream-metrics">
             <div>
-              <span class="metric-label">FPS</span>
-              <strong id="fps-counter">0</strong>
+              <span class="metric-label" id="metric-a-label">Mode</span>
+              <strong id="metric-a-value">IMAGE</strong>
             </div>
             <div>
-              <span class="metric-label">Mode</span>
-              <strong id="mode-label">IMAGE</strong>
+              <span class="metric-label" id="metric-b-label">FPS</span>
+              <strong id="metric-b-value">0</strong>
+            </div>
+            <div>
+              <span class="metric-label" id="metric-c-label">Detections</span>
+              <strong id="metric-c-value">0</strong>
+            </div>
+            <div>
+              <span class="metric-label" id="metric-d-label">Max Confidence</span>
+              <strong id="metric-d-value">0%</strong>
             </div>
           </div>
-          <p class="stream-note">若模型尚未训练完成，检测接口会返回清晰错误信息，不会静默降级。</p>
+          <div id="artifact-links" class="artifact-links"></div>
+          <p class="stream-note" id="stream-note">若模型尚未训练完成，检测接口会返回清晰错误信息，不会静默降级。</p>
         </article>
       </div>
+
+      <section class="preview-panel" id="preview-panel" hidden>
+        <div class="section-header">
+          <span>序列预览</span>
+          <span class="tiny-label" id="preview-caption">导出后可查看关键帧</span>
+        </div>
+        <div id="sequence-preview-grid" class="sequence-preview-grid"></div>
+      </section>
     </main>
   </div>
+  <script src="/preview-controller.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>
-

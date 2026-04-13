@@ -15,23 +15,25 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.api import api_router
-from app.inference import yolo_service
+from app.inference import obstacle_service, traffic_service
 
 
 STATIC_DIR = PROJECT_ROOT / "static"
+RESULTS_DIR = PROJECT_ROOT / "results"
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    try:
-        if yolo_service.runtime_config.best_weight_path.exists():
-            yolo_service.load_model()
-    except FileNotFoundError:
-        pass
+    for service in (traffic_service, obstacle_service):
+        try:
+            if service.resolve_model_path().exists():
+                service.load_model()
+        except FileNotFoundError:
+            continue
     yield
 
 
-app = FastAPI(title="TrafficDetect Web", version="2.0.0", lifespan=lifespan)
+app = FastAPI(title=traffic_service.runtime_config.web_title, version="2.1.0", lifespan=lifespan)
 app.include_router(api_router, prefix="/api")
 
 
@@ -40,6 +42,7 @@ async def favicon() -> Response:
     return Response(status_code=204)
 
 
+app.mount("/results", StaticFiles(directory=str(RESULTS_DIR), html=False), name="results")
 app.mount("/", StaticFiles(directory=str(STATIC_DIR), html=True), name="static")
 
 

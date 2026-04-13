@@ -5,6 +5,7 @@ paths:
   weights_dir: "weights"
   results_dir: "results"
   dataset_dir: "datasets"
+  obstacle_dataset_dir: "datasets/idd_animal_yolo"
 
 model:
   base: "yolov8s.pt"
@@ -50,8 +51,37 @@ web:
   best_model: "best.pt"
   default_conf: 0.25
   default_iou: 0.45
+  default_module: "traffic"
+  modules:
+    traffic:
+      title: "交通目标检测"
+      subtitle: "BDD100K 10 类交通目标识别"
+      best_model: "best.pt"
+    obstacle:
+      title: "道路动物识别"
+      subtitle: "IDD animal 单类检测"
+      best_model: "animal_best.pt"
 
 data_sources:
-  bdd100k_raw: "C:/Users/89657/Desktop/bdd100k_raw/100k"
-  roadobstacle21_raw: "C:/Users/89657/Desktop/roadobstacle21_raw/dataset_ObstacleTrack"
+  bdd100k_raw: "datasets_raw/bdd100k/100k"
+  roadobstacle21_raw: "datasets_raw/roadobstacle21/dataset_ObstacleTrack"
+  sod_raw: "datasets_raw/Small_Obstacle_Dataset"
+  idd_detection_raw: "datasets_raw/IDD_Detection"
 
+obstacle_classes:
+  names: ["animal"]
+  ch_names: ["道路动物"]
+
+obstacle_task: "detect"
+obstacle_model: "yolo11n.pt"
+obstacle_base: "yolo11n.pt"
+obstacle_epochs: 100
+obstacle_imgsz: 960
+obstacle_batch_size: 32
+obstacle_workers: 8
+obstacle_patience: 20
+obstacle_supports_batch: true
+obstacle_supports_stream: false
+obstacle_supports_masks: false
+obstacle_supports_boxes: true
+obstacle_supports_sequence_input: true

@@ -3,7 +3,7 @@ project:
 
 paths:
   weights_dir: "weights"
-  results_dir: "results"
+  results_dir: "result"
   dataset_dir: "datasets"
   obstacle_dataset_dir: "datasets/idd_animal_yolo"
 

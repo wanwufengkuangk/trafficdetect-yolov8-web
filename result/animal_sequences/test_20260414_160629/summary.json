@@ -1,0 +1,8 @@
+{
+  "job_name": "test_20260414_160629",
+  "frame_count": 144,
+  "positive_frame_count": 124,
+  "average_detections_per_frame": 1.6875,
+  "max_detection_count": 16,
+  "max_confidence": 0.980988
+}

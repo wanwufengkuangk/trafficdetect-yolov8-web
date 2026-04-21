@@ -15,11 +15,14 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.api import api_router
+from app.config import load_runtime_config
 from app.inference import obstacle_service, traffic_service
 
 
 STATIC_DIR = PROJECT_ROOT / "static"
-RESULTS_DIR = PROJECT_ROOT / "results"
+RUNTIME_CONFIG = load_runtime_config()
+RESULTS_DIR = RUNTIME_CONFIG.results_dir
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 @asynccontextmanager
@@ -33,7 +36,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title=traffic_service.runtime_config.web_title, version="2.1.0", lifespan=lifespan)
+app = FastAPI(title=RUNTIME_CONFIG.web_title, version="2.1.0", lifespan=lifespan)
 app.include_router(api_router, prefix="/api")
 
 

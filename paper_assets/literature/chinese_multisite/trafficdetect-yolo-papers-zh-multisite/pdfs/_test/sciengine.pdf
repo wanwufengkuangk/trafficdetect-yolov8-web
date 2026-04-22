@@ -1,0 +1,451 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="application/javascript">
+        $(document).ready(function () {
+            init();
+
+        });
+
+        function init() {
+            var href = window.location.href;
+            if (href.indexOf("ref=") > -1) {
+                window.location.href = (href.substring(href.indexOf("ref=") + 4, href.length));
+            } else {
+
+                $("body").css("display", "block")
+                $("#div").css("display", "block")
+            }
+        }
+    </script>
+</head>
+<body onload="init()" style="display: none">
+
+<div class="row con" id="div" style="display: none">
+    <div class="resetPass col-xs-8 col-xs-offset-2">
+        <p style="color: red">
+            
+            Sorry, the page you request does not exist.
+        </p>
+    </div>
+</div>
+</div>
+<!-- 底部信息 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html lang="en">
+<!-- ueditor编辑器 -->
+<script src="/js/ueditor/ueditor.config.js?version=0.3" type="text/javascript"></script>
+<script src="/js/ueditor/ueditor.all.min.js?version=0.1" type="text/javascript"></script>
+<script src="/js/ueditor/lang/zh-cn/zh-cn.js" type="text/javascript"></script>
+<script src="/js/ueditor/dialogs/customDialog/customDialog.js" type="text/javascript"></script>
+<body>
+<!--新增备案信息修改 直接存入redis，不做入库-->
+<div class="tali_box" style="float: left;">
+    <!--隐藏一个黑名单链接-->
+    <div style="display: none">
+        <a href="/queryAAA">qqqq</a>
+    </div>
+    <div>
+        <div>
+            <p>
+                <a href="javascript:void(0);" onclick="openContactModel()">Contact and support</a>
+            </p>
+        </div>
+        <div style="display: inline-block;">
+            <p id="companyInfoCh"></p>
+            <p id="companyInfoEn"></p>
+        </div>
+        <div style="display: inline-block;">
+            
+        </div>
+        <p id="registerInfos"></p>
+    </div>
+</div>
+
+<div class="modal fade" id="myFooterEditModal" tabindex="-1" role="dialog" aria-labelledby="myFooterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 750px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 id="title" class="modal-title"></h4>
+            </div>
+            <form id="updateFooterForm" method="post" action="/publishers/submitFooterInfo" novalidate="novalidate" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <!-- 公司信息英文 -->
+                    <div class="form-group">
+                        <label class="control-label">Company Info</label>
+                        <input type="text" autocomplete="off" id="CompanyEnName" name="CompanyEnName" class="form-control">
+                    </div>
+                    <!-- 公司信息中文 -->
+                    <div class="form-group">
+                        <label class="control-label">Chinese Company Info</label>
+                        <input type="text" autocomplete="off" id="CompanyChName" name="CompanyChName" class="form-control">
+                    </div>
+                    <!-- ICP备案 -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Integrated Info
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group" id="IntegratedInfoDiv">
+                                <script id="IntegratedInfo" name="IntegratedInfo" type="text/plain" style="width:680px;"></script>
+                            </div>
+                        </div>
+                    </div>
+                    <!--联网备案信息-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Register System Info
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group" id="RegisterSystemInfoDiv">
+                                <script id="RegisterSystemInfo" name="RegisterSystemInfo" type="text/plain" style="width:680px;"></script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="footer-submit-button" type="button"  class="btn btn-default">
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myContactModal" tabindex="-1" role="dialog" aria-labelledby="myContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 750px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 id="contactTitle" class="modal-title"></h4>
+            </div>
+            <form id="updateContactForm" method="post" action="/publishers/submitContactInfo" novalidate="novalidate" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p>
+                    <h4>Email us</h4>
+                    </p><br>
+                    <p><span style="color: red; ">*</span>is must be filled in</p>
+                    <br>
+                    <div class="form-group">
+                        <label class="control-label">Your role<span style="color: red;">*</span></label>
+                        &nbsp;
+                        <input type="radio" name="role" id="admin" value="1">Administrator&nbsp;&nbsp;
+                        <input type="radio" name="role" id="userId" value="2" checked>User
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Journal name<span style="color: red; ">*</span></label>
+                        <input type="text" autocomplete="off" id="JournalName" name="JournalName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Your question<span
+                                style="color: red; ">*</span></label>
+                        <textarea placeholder="" rows="4" name="questionInfos" id="questionInfos"
+                                  class="form-control"></textarea>
+                    </div>
+
+                    <!-- 上传附件 -->
+                    <div class="form-group">
+                        <label class="control-label">
+                            Upload attachment</label><br>
+                            <span style="font-size: 12px">The file size should not exceed 20MB</span>
+                            <span id="attachment"></span>
+                        </label>
+                        <div class="row">
+                            <input type="file" style="padding-left:2%" id="filePath" name="filePath" onchange="checkFile(this)"/>
+                            <input type="hidden" name="pathFileHidden" id="pathFileHidden"/>
+                            <div id="removeFile" style="padding-left: 2%;display: none" onclick="cleanFile(this);">
+                                <a href="javascript:void(0);"><span class="glyphicon glyphicon-remove"></span>
+                                    Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <!--联系方式-->
+                    <p>
+                    <h4>Your contact information</h4>
+                    </p><br><br>
+                    <div class="form-group">
+                        <label class="control-label">Title</label>
+                        <select name="gender" id="gender"  class="form-control">
+                            
+                                <option value='1'>Mr</option>
+                                <option value='2'>Mrs</option>
+                            
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">First name<span style="color: red; ">*</span></label>
+                        <input type="text" autocomplete="off" id="surname" name="surname" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Last name<span style="color: red; ">*</span></label>
+                        <input type="text" autocomplete="off" id="lastname" name="lastname" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email<span style="color: red; ">*</span></label>
+                        <input type="text" autocomplete="off" id="email" name="email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Confirm Email address<span style="color: red; ">*</span></label>
+                        <input type="text" autocomplete="off" id="comfirmEmail" name="comfirmEmail" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Phone</label>
+                        <input type="text" autocomplete="off" id="phone" name="phone" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="contact-submit-button" type="button" class="btn btn-default">
+                        Submit
+                    </button>
+                    <button id="cancel-submit-button" type="button" class="btn btn-default" aria-hidden="true" data-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script type="text/javascript">
+    var lang='en_US';
+    //初始化富文本编辑器
+    UE.delEditor('IntegratedInfo');
+    UE.delEditor('RegisterSystemInfo');
+    var IntegratedInfo= UE.getEditor('IntegratedInfo',{
+        //initialFrameWidth :680,//设置编辑器宽度
+        initialFrameHeight:100,//设置编辑器高度
+        scaleEnabled:true//设置不自动调整高度
+        //scaleEnabled {Boolean} [默认值：false]//是否可以拉伸长高，(设置true开启时，自动长高失效)
+    });
+    var RegisterSystemInfo= UE.getEditor('RegisterSystemInfo',{
+        //initialFrameWidth :680,//设置编辑器宽度
+        initialFrameHeight:100,//设置编辑器高度
+        scaleEnabled:true//设置不自动调整高度
+        //scaleEnabled {Boolean} [默认值：false]//是否可以拉伸长高，(设置true开启时，自动长高失效)
+    });
+
+    $(function () {
+        //Modal可见时触发
+        $('#myFooterEditModal').on('shown.bs.modal', function() {
+            footerFormValidator();
+        });
+        //Modal验证销毁重构
+        $('#myFooterEditModal').on('hidden.bs.modal', function() {
+            if($("#updateFooterForm").data('bootstrapValidator')!=undefined&&$("#updateFooterForm").data('bootstrapValidator')!=null){
+                $("#updateFooterForm").data('bootstrapValidator').destroy();
+                $('#updateFooterForm').data('bootstrapValidator',null);
+            }
+        });
+        getFooterInfo();
+    });
+    $("#footer-submit-button").on("click", function(){
+        $("#updateFooterForm").data("bootstrapValidator").validate();
+        if(!$("#updateFooterForm").data("bootstrapValidator").isValid()){
+            return ;
+        }
+        document.getElementById("updateFooterForm").submit();
+    });
+    function footerFormValidator() {
+        $("#updateFooterForm").bootstrapValidator({
+            feedbackIcons: { //根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },fields: {
+                CompanyEnName: {
+                    validators: {
+                        notEmpty: {
+                            message: 'You must enter'
+                        }
+                    }
+                },
+                CompanyChName: {
+                    validators: {
+                        notEmpty: {
+                            message: 'You must enter'
+                        }
+                    }
+                },
+            }
+        });
+    }
+
+    function getFooterInfo() {
+        var lang = 'en_US';
+        $.ajax({
+            type: "POST",
+            url: "/publishers/getFooterInfo",
+            success: function (data) {
+                $('#companyInfoCh').text(data.companyInfoCh);
+                $('#companyInfoEn').text(data.companyInfoEn);
+                if (lang == 'zh_CN') {
+                    //隐藏英文
+                    $('#companyInfoEn').css("display", "none");
+                } else {
+                    $('#companyInfoCh').css("display", "none");
+                }
+                var info = data.integratedInfo + data.registerSystemInfo;
+                $('#registerInfos').html(info);
+                //去除p标签
+                info = $($('#registerInfos').find("p")[0]).html() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + $($('#registerInfos').find("p")[1]).html();
+                $('#registerInfos').html(info);
+            },
+            error: function (message) {
+                //swal(getTipData(1), "","error");
+            }
+        });
+    }
+
+    function openFooterModel() {
+        //填充数据到编辑按钮
+        $("#myFooterEditModal").modal("show");
+        $.ajax({
+            type: "POST",
+            url: "/publishers/getFooterInfo",
+            success: function (data) {
+                $('#CompanyChName').val(data.companyInfoCh);
+                $('#CompanyEnName').val(data.companyInfoEn);
+                IntegratedInfo.setContent("");
+                RegisterSystemInfo.setContent("");
+                IntegratedInfo.setContent(data.integratedInfo);
+                RegisterSystemInfo.setContent(data.registerSystemInfo);
+            },
+            error: function (message) {
+                //swal(getTipData(1), "","error");
+            }
+        });
+    }
+
+    function checkFile(file) {
+        if (file.files && file.files[0]) {
+            if (file.files[0].size > 20971520) {
+                swal('The file size should not exceed 20MB');
+            } else {
+                $("#removeFile").show();
+            }
+        }
+    }
+
+    function cleanFile(obj){
+        //清空隐藏域
+        $(obj).parent().find("input[type='hidden']").val("");
+        //清空开始
+        var file = $(obj).parent().find("input[type='file']");
+        file.after(file.clone().val(""));
+        file.remove();
+        //清空结束
+        $(obj).hide();
+    }
+
+    function openContactModel() {
+        $("#myContactModal").modal("show");
+    }
+
+    $("#contact-submit-button").on("click", function(){
+        //校验数据
+        var file = document.getElementById("filePath").files[0];
+        if (file != undefined && file.size > 20971520){
+            swal('The file size should not exceed 20MB');
+            return;
+        }
+        var journalName = $("#JournalName").val();
+        if (journalName == ''){
+            swal('journal name can not empty');
+            return;
+        }
+        var question = $("#questionInfos").val();
+        if (question == ''){
+            swal('question can not empty');
+            return;
+        }
+        var surname = $("#surname").val();
+        if (surname == ''){
+            swal('surname can not empty');
+            return;
+        }
+        var lastname = $("#lastname").val();
+        if (lastname == ''){
+            swal('lastname can not empty');
+            return;
+        }
+        var email = $("#email").val();
+        if (email == ''){
+            swal('email can not empty');
+            return;
+        }
+        var comfirmEmail = $("#comfirmEmail").val();
+        if (comfirmEmail == ''){
+            swal('comfirm email can not empty');
+            return;
+        }
+        if (email != comfirmEmail) {
+            swal('The email address is different');
+            return;
+        }
+        if (!email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)) {
+            swal('The email format is incorrect');
+            return;
+        }
+        document.getElementById("updateContactForm").submit();
+        swal('Saved', "", "success")
+
+    });
+
+    $("#cancel-submit-button").on("click", function(){
+        $('#updateContactForm')[0].reset();
+    });
+
+</script>
+</body>
+</html>
+
+
+</body>
+
+</html>

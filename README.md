@@ -125,7 +125,7 @@ yolov8/
 ├─ datasets/            # 训练数据集
 ├─ inference/           # 命令行推理脚本
 ├─ models/              # 自定义模型注册逻辑
-├─ results/             # 训练输出目录
+├─ result/              # 训练、验证和 Web 批量推理输出目录
 ├─ static/              # 前端页面与脚本
 ├─ training/            # 训练与验证脚本
 ├─ weights/             # 固定命名的最终权重
@@ -133,6 +133,87 @@ yolov8/
 ├─ start_web.bat        # Windows 本地一键启动脚本
 └─ requirements.txt     # 项目依赖
 ```
+
+## 项目清理与合并建议
+
+本节只给出清理建议，不代表必须立即删除。删除前建议先确认是否还需要复现实验、继续训练或保留论文素材。
+
+### 建议保留的核心工程内容
+
+| 路径 | 建议 | 原因 |
+|---|---|---|
+| `app/` | 保留 | FastAPI 后端、配置加载和 Web 推理服务核心代码 |
+| `static/` | 保留 | Web 前端页面、样式和交互脚本 |
+| `configs/` | 保留 | 数据集、模型和运行参数配置 |
+| `data/` | 保留 | BDD100K、IDD animal 数据转换和校验脚本 |
+| `training/` | 保留 | 模块一和模块二训练、验证、导出脚本 |
+| `inference/` | 保留 | 本地命令行推理脚本 |
+| `models/` | 保留 | 自定义模型注册、损失函数和结构扩展逻辑 |
+| `weights/` | 保留 | Web 演示所需最终权重，至少保留 `best.pt` 和 `animal_best.pt` |
+| `requirements.txt` | 保留 | 项目依赖入口 |
+| `start_web.py`、`start_web.bat` | 保留 | 本地 Web 演示启动入口 |
+
+### 可以删除或不建议提交的内容
+
+| 路径 | 建议 | 删除条件 | 说明 |
+|---|---|---|---|
+| `app/__pycache__/`、`models/__pycache__/`、`training/__pycache__/`、`inference/__pycache__/` | 可以删除 | 任意时间 | Python 缓存目录，运行时会自动重新生成 |
+| `results/` | 可以删除或合并到 `result/` | 确认其中没有需要保留的验证输出 | 当前配置文件使用的是 `result/`，`results/` 容易造成目录混乱 |
+| `result/animal_sequences/` | 可按需删除 | 不需要保留 Web 批量推理生成的图片序列和 zip | 属于运行产物，占用空间较大，不影响代码运行 |
+| `result/train_animal/`、`result/train_bdd_full/` | 可归档后删除 | 已经提取关键指标、曲线和最佳权重 | 属于训练产物；若要复现实验或查原始日志，先不要删 |
+| `datasets/` | 可外置或删除 | 不在本机继续训练，只做 Web 演示 | 数据集体积最大；Web 演示只依赖 `weights/`，不依赖完整训练集 |
+| `.codex/` | 可从交付包移除 | 打包给别人或提交最终项目时 | Codex 本地会话文件，不属于项目源码 |
+| `.git/` | 不要随意删除 | 只有在做纯交付压缩包且不需要版本历史时 | 删除后会失去 Git 版本记录 |
+
+### 建议合并或整理的内容
+
+| 当前路径 | 建议合并到 | 原因 |
+|---|---|---|
+| `paper_assets/` 与 `论文插图_手动插入/` | 已整理到 `paper_assets/manual_figures/` | 两者都是论文插图素材，集中保存后更便于论文插图维护 |
+| `交通目标检测论文初稿.md`、`面向道路场景的改进YOLOv8s交通目标检测系统设计与验证_无图片占位版.docx`、`项目计划书.md` | 已整理到 `paper_assets/manuscript/` | 论文文档已从项目根目录移出，根目录更聚焦工程入口 |
+| `trafficdetect-yolo-papers/`、`trafficdetect-yolo-papers-zh/`、`trafficdetect-yolo-papers-zh-multisite/` | 已整理到 `paper_assets/literature/` | 论文已引用文献放入 `core/`，原始检索资料统一归档到 `chinese_multisite/` |
+| 根目录 `yolov8s.pt` | 已移动到 `weights/yolov8s.pt` | 当前训练脚本优先查找 `weights/yolov8s.pt`，权重文件已统一归入 `weights/` |
+
+### 推荐整理后的目录形态
+
+```text
+yolov8/
+├─ app/
+├─ configs/
+├─ data/
+├─ datasets/                 # 可外置，若只演示 Web 可不随项目交付
+├─ inference/
+├─ models/
+├─ paper_assets/
+│  ├─ manual_figures/
+│  ├─ literature/
+│  │  ├─ core/              # 论文已引用核心文献
+│  │  │  ├─ chinese/        # 已引用中文核心文献
+│  │  │  └─ english/        # 已引用英文核心文献
+│  │  └─ chinese_multisite/ # 原始文献检索归档
+│  └─ manuscript/
+├─ result/                   # 训练与推理产物，可按需清理
+├─ static/
+├─ tools/
+├─ training/
+├─ weights/
+├─ README.md
+├─ requirements.txt
+├─ start_web.bat
+└─ start_web.py
+```
+
+### 清理优先级建议
+
+| 优先级 | 操作 | 预期收益 |
+|---|---|---|
+| 高 | 删除所有 `__pycache__/` | 安全、无风险、清理缓存 |
+| 高 | 删除或合并空的 `results/` 到 `result/` | 避免结果目录混乱 |
+| 中 | 已将论文引用文献整理到 `paper_assets/literature/core/`，其余检索资料归档到 `paper_assets/literature/chinese_multisite/` | 写论文时优先查看核心文献，备用资料也不丢失 |
+| 中 | 已合并 `paper_assets/` 与 `论文插图_手动插入/` | 论文素材更清晰 |
+| 中 | 已将根目录论文文档移动到 `paper_assets/manuscript/` | 根目录更干净 |
+| 低 | 删除或外置 `datasets/` | 释放大量空间，但会影响本地训练复现 |
+| 低 | 清理 `result/` 下大体积训练和推理产物 | 释放空间，但会影响原始实验记录追溯 |
 
 ## 环境依赖
 

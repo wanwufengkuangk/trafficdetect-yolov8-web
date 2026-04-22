@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from pathlib import Path
 from typing import Any
 
@@ -8,6 +9,7 @@ import yaml
 
 
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parents[1] / "configs" / "default.yaml"
+CONFIG_ENV_VAR = "TRAFFICDETECT_CONFIG"
 
 
 @dataclass(frozen=True)
@@ -137,7 +139,8 @@ def _build_module(
 
 
 def load_runtime_config(config_path: str | Path | None = None) -> RuntimeConfig:
-    config_path = Path(config_path or DEFAULT_CONFIG_PATH).resolve()
+    resolved_config = config_path or os.getenv(CONFIG_ENV_VAR) or DEFAULT_CONFIG_PATH
+    config_path = Path(resolved_config).resolve()
     root_dir = _resolve_root_dir(config_path)
 
     with config_path.open("r", encoding="utf-8") as handle:
